@@ -3,30 +3,29 @@ name: ASP.NET CI/CD
 on:
   push:
     branches: [ main ]
+    
   pull_request:
     branches: [ main ]
 
 jobs:
   build:
-    runs-on: ubuntu
+    runs-on: self-hosted
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v1      
-
-    - name: Restore dependencies
-      run: dotnet restore
-
+   
     - name: Build
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build -c Release
 
   build-and-push-docker-image:
-    runs-on: ubuntu
+    needs: build
+    runs-on: self-hosted
     
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
         
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
@@ -43,7 +42,7 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: yourusername/yourappname:latest
+        tags: yourusername/sampleapp:latest
         platforms: linux/arm64
     
     - name: Logout of DockerHub
