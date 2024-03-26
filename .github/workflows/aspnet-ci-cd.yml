@@ -3,7 +3,6 @@ name: ASP.NET CI/CD
 on:
   push:
     branches: [ main ]
-    
   pull_request:
     branches: [ main ]
 
@@ -42,7 +41,7 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: yourusername/sampleapp:latest
+        tags: ${{secrets.DOCKER_USERNAME}}/sampleapp:latest
         platforms: linux/arm64
     
     - name: Logout of DockerHub
